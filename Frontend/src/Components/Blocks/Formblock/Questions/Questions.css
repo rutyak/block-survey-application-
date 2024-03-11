@@ -1,0 +1,10 @@
+.que-error {
+    display: flex;
+    align-items: center;
+    margin-left: 0.3rem;
+}
+
+.disabled{
+    opacity: 0.6;
+    cursor: not-allowed;
+}

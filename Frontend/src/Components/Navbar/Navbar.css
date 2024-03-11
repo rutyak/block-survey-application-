@@ -1,0 +1,54 @@
+.navbar{
+    width: 17%;
+    height: 100%;
+    border: 1px solid gray;
+    background: #d89545
+}
+
+.navbar .title img{
+    width: 3rem;
+}
+
+.navbar .title{
+    display: flex;
+    justify-content: center;
+    gap: 0.8rem;
+    padding: 0.5rem;
+}
+
+.blocks{
+    margin-top: 2rem;
+    text-align: -webkit-center;
+}
+
+.formBlock, .preview{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+        width: 85%;
+        padding: 0.2rem;
+        border: 1px solid gray;
+        border-radius: 0.5rem;
+        background: bisque;
+        box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+        margin-top: 1.5rem;
+        text-align: -webkit-center;
+}
+
+.survey-form p{
+    margin-bottom: 0.3rem;
+}
+
+.formBlock img{
+    width: 1.5rem;
+}
+
+.preview img{
+    width: 1.5rem;
+}
+
+.blocks a{
+    text-decoration: none;
+    color: currentcolor;
+}

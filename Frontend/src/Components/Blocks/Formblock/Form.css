@@ -1,0 +1,179 @@
+.form-container{
+    width: 83%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid gray;
+    background: #5f4b30;
+}
+
+.form-container h2{
+    margin-top: 1.5rem;
+}
+
+.form-container .form-survey{
+    width: 55%;
+    height: 90.6%;
+    border-radius: 0.5rem;
+    margin-top: 0.8rem;
+    padding: 1rem;
+}
+
+.title-desc{
+    border: 1px solid gray;
+    border-radius: 1rem;
+    padding: 2rem;
+}
+
+.title-desc .title{
+    margin-bottom: 0.8rem;
+}
+
+.title label{
+    margin-right: 4rem;
+}
+
+.error {
+    display: flex;
+    align-items: center;
+    margin-left: 6.5rem;
+}
+
+.error img{
+    width: 0.8rem;
+    margin-right: 0.3rem;
+    margin-top: 0.1rem;
+}
+
+.error p{
+    color: #d72828;
+    font-size: 0.8rem;
+}
+
+.desc{
+    display: flex;
+}
+
+.desc label{
+    margin-right: 1rem;
+}
+
+.desc textarea{
+    width: 81.4%;
+    margin: -top;
+    padding-top: 0.3rem;
+    padding-left: 0.4rem;
+    border: 1px solid black;
+    border-radius: 0.5rem;
+}
+
+.title-desc input{
+    width: 82%;
+    height: 2rem;
+    border: 1px solid black;
+    border-radius: 0.5rem;
+    padding-left: 0.5rem;
+}
+
+.input-type-btn{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.input-type-btn button{
+    width: 12rem;
+    height: 2rem;
+    border: 1px solid gray;
+    border-radius: 0.5rem;
+    background: black;
+    color: aqua;
+    padding-left: 0.5rem;
+}
+
+.input-type-btn p{
+    font-size: 0.9rem;
+}
+
+.questions input{
+    width: 99%;
+    height: 2.3rem;
+    border: 1px solid black;
+    border-radius: 0.5rem;
+    padding-left: 0.5rem;
+    margin-top: 1.5rem;
+}
+
+.checkbox button{
+    width: 22%;
+    height: 2rem;
+    margin-top: 0.5rem;
+    border-radius: 0.5rem;
+    border: 1px solid black;
+    background: #225b19;
+}
+
+.questions{
+    height: 66%;
+    overflow-y: auto;
+}
+
+.submit-btn{
+    display: flex;
+    justify-content: center;
+    margin-top: 1.5rem;
+}
+
+.submit-btn input{
+    width: 36%;
+    height: 2.2rem;
+    border: 1px solid gray;
+    border-radius: 0.5rem;
+    background: black;
+    color: antiquewhite;
+}
+
+.preview-btn a{
+    position: fixed;
+    right: 1rem;
+    top: 0.1rem;
+    width: 10%;
+    text-decoration: none;
+    color: black;
+}
+
+.preview{
+    background: #9fb2b2;
+}
+
+.options input{
+    width: 76%;
+}
+
+.options button{
+    height: 2.3rem;
+    background: #0f785a;
+    margin-left: 0.5rem;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    margin-left: 0.5rem;
+  }
+  
+
+  ::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey; 
+    border-radius: 20px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #272121;
+    border-radius: 10px;
+  }
+ 
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgb(141, 124, 124); 
+  }
