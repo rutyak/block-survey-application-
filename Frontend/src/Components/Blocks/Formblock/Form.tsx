@@ -4,12 +4,11 @@ import Button from '../../Button/Button';
 import Questions from './Questions/Questions';
 import errorIcon from '../../../Assets/error.png'
 import { Link } from 'react-router-dom';
-import preview from '../../../Assets/preview.png'
+import Error from './Error/Error';
 
 const Form = () => {
 
-  let optId = Math.ceil(Math.random() * 1000);
-  let queId = Math.ceil(Math.random() * 10000);
+  const [isSubmitClicked, setIsSubmitClicked] = useState<boolean>(false);
   let typeArr = ['Input', 'Checkbox', 'Radio'];
 
   type opt = {
@@ -39,13 +38,17 @@ const Form = () => {
   const [error, setError] = useState<any>({
     title: false,
     desc: false,
-    que: false,
-    opt: false,
+    que: {},
+    opt: {},
     optLen: false
   })
 
   function addQuestion(type: string) {
+  const optId = Math.ceil(Math.random() * 1000);
+
     const opt = [{ id: optId, text: '' }, { id: optId + 1, text: '' }];
+
+  let queId = Math.ceil(Math.random() * 10000);
 
     setSurvey((prevSurvey: any) => ({
       ...prevSurvey,
@@ -54,12 +57,6 @@ const Form = () => {
         type === 'Input' ? { id: queId, type: type, questions: '' } : { id: queId + 1, type: type, questions: '', options: opt }
       ],
     }));
-
-    setError({
-      ...error,
-      desc: survey.desc === '',
-      title: survey.title === ''
-    })
   }
 
   function handleQuestions(e: React.ChangeEvent<HTMLInputElement>, index: number) {
@@ -67,11 +64,6 @@ const Form = () => {
     const copySurvey = { ...survey }; //copy of survey 
     const object = copySurvey.questions[index]; // taking que array
     object.questions = e.target.value; //updating that que
-
-    setError({
-      ...error,
-      que: copySurvey.questions[index].questions === ''
-    })
   }
 
   function handleOptions(e: React.ChangeEvent<HTMLInputElement>, index: number, optIndex: number) {
@@ -79,14 +71,11 @@ const Form = () => {
     const copySurvey = { ...survey }; //copy of survey
     const mainQue = { ...copySurvey.questions[index] }; // taking specific que
     mainQue.options[optIndex].text = e.target.value; //updating that ques option
-
-    setError({
-      ...error,
-      opt: survey.questions[index].options[optIndex].text === ''
-    })
   }
 
   function addOption(index: number) {
+  const optId = Math.ceil(Math.random() * 1000);
+
     const copySurvey = { ...survey };  //copy of entire survey
     const opt = [...copySurvey.questions[index].options, { id: optId, text: '' }];
 
@@ -106,6 +95,11 @@ const Form = () => {
       options: removed
     }
     setSurvey(copysurvey)
+  }
+
+  function handleBlur(e: React.ChangeEvent<HTMLInputElement>){
+      
+        
   }
 
   return (
@@ -133,15 +127,18 @@ const Form = () => {
                   ...survey,
                   title: e.target.value
                 })
-                setError({
-                  ...error,
-                  title: survey.title === ''
-                })
               }
-              }
+            }
+            onBlur={ ()=>{
+              setError({
+                ...error,
+                title: survey.title===''
+              })
+            }
+            }
               required
             />
-            {survey.title === '' && error.title &&
+            { error.title &&
               (
                 <div className='error'>
                   <img src={errorIcon} alt="icon" />
@@ -160,26 +157,20 @@ const Form = () => {
                   ...survey,
                   desc: e.target.value
                 })
+              }}
+              onBlur={()=>{
                 setError({
                   ...error,
-                  title: survey.title === '',
-                  desc: survey.desc === ''
+                  desc: survey.desc===''
                 })
               }}
-              required
             />
           </div>
           {error.desc &&
-            <div className='error'>
-              <img src={errorIcon} alt="icon" />
-              <p>Description is required</p>
-            </div>
+            survey.desc===''?<Error text={'Description is required'}/>:''
           }
-          {survey.desc.replace(/\s/g, '').length < 45 && survey.desc !== '' &&
-            <div className='error'>
-              <img src={errorIcon} alt="icon" />
-              <p>Description must contains minimum 45</p>
-            </div>
+          {survey.desc.replace(/\s/g, '').length < 45 && survey.desc !== '' && isSubmitClicked &&
+            <Error text={'Description must contain minimum 45'}/>
           }
         </div>
         <div className='input-type-btn'>
@@ -199,6 +190,8 @@ const Form = () => {
           addOption={addOption}
           error={error}
           setError={setError}
+          isSubmitClicked={isSubmitClicked}
+          setIsSubmitClicked={setIsSubmitClicked}
         />
       </div>
     </div>

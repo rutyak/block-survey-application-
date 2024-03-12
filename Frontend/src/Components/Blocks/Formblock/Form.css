@@ -34,11 +34,12 @@
     margin-right: 4rem;
 }
 
-.error {
+.error{
     display: flex;
     align-items: center;
     margin-left: 6.5rem;
 }
+
 
 .error img{
     width: 0.8rem;

@@ -1,11 +1,10 @@
-import { useState } from 'react'
 import Error from '../Error/Error'
 import './Questions.css'
 import { toast } from 'react-toastify'
 import axios from 'axios'
 const BaseUrl = "http://localhost:5000"
 
-const Questions = ({ survey, handleQuestions, handleOptions, handleRemove, addOption, error, setError}: any) => {
+const Questions = ({ survey, handleQuestions, handleOptions, handleRemove, addOption, error, setError, setIsSubmitClicked, isSubmitClicked }: any) => {
 
     type opt = {
         id: number,
@@ -19,51 +18,48 @@ const Questions = ({ survey, handleQuestions, handleOptions, handleRemove, addOp
         options: opt[]
     }
 
-    const [isSubmitClicked, setIsSubmitClicked] = useState<boolean>(false);
-
     async function handleSubmitForm(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         setIsSubmitClicked(true);
-    
+
         let ans: any[] = [];
 
-        localStorage.setItem('survey',JSON.stringify(survey));
-    
+        localStorage.setItem('survey', JSON.stringify(survey));
+
         const validQue = survey.questions?.every((que: queType) => {
             return que.questions.length >= 10;
         });
-    
+
         survey.questions?.forEach((que: queType) => {
             if (que.type === 'Checkbox' || que.type === 'Radio') {
                 ans[1] = que.type === 'Checkbox' || que.type === 'Radio';
-                ans[2] = que.options.length >= 2; 
-                ans[3] = que.questions.length >= 10;
+                ans[2] = que.options.length >= 2;
             }
         });
-    
+
         setError({
             ...error,
             title: survey.title === '',
             desc: survey.desc === ''
         });
-    
+
         if (
             survey.title !== '' &&
             survey.desc !== '' &&
-            survey.desc.replace(/\s/g, '').length > 40 &&
-            (ans[1] ? ans[2] : true) && 
+            survey.desc.replace(/\s/g, '').length > 45 &&
+            (ans[1] ? ans[2] : true) &&
             validQue
         ) {
             console.log(survey);
-            
-            const postform ={
+
+            const postform = {
                 type: 'Survey',
                 formsurvey: survey
             }
             try {
-                const res = await axios.post(`${BaseUrl}/formsurvey`,postform);
+                const res = await axios.post(`${BaseUrl}/formsurvey`, postform);
                 console.log(res);
-                if (res.status === 200){
+                if (res.status === 200) {
                     toast.success("Survey uploaded successfully!!");
                     window.location.reload();
                 }
@@ -73,7 +69,7 @@ const Questions = ({ survey, handleQuestions, handleOptions, handleRemove, addOp
             }
         }
     }
-    
+
     return (
         <div className='questions'>
             <form action="" onSubmit={(e) => handleSubmitForm(e)} id='form-reset'>
@@ -83,52 +79,83 @@ const Questions = ({ survey, handleQuestions, handleOptions, handleRemove, addOp
                             <div key={que.id}>
                                 {que.type === 'Input' &&
                                     <div>
-                                        <input 
-                                        type="text" 
-                                        placeholder='Enter your questions?' 
-                                        onChange={(e) => handleQuestions(e, index)} 
-                                        required 
+                                        <input
+                                            type="text"
+                                            placeholder='Enter your questions?'
+                                            onChange={(e) => handleQuestions(e, index)}
+                                            onBlur={(e) =>
+                                                setError((prevErr: any) => {
+                                                    return {
+                                                        ...prevErr,
+                                                        que: {
+                                                            ...prevErr.que,
+                                                            [que.id]: que.questions === ''
+                                                        }
+                                                    }
+                                                })
+                                            }
                                         />
-                                        { survey.questions[index].questions===''&& survey.questions[index].id === que.id &&
-                                            <Error text={'Question is required'}/>
+                                         {error.que && error.que[que.id] || isSubmitClicked &&
+                                            que.questions===''?<Error text={'Question is required'}/>:''
                                         }
-                                        { survey.questions[index].questions.replace(/\s/g, '').length < 10 && survey.questions[index].questions !== '' && isSubmitClicked &&
-                                                <Error text={'Question must contains minimum 10 char'}/>
+                                        { que.questions !== '' && que.questions.replace(/\s/g, '').length < 10 &&
+                                            isSubmitClicked &&
+                                            <Error text={'Question must contains minimum 10 char'} />
                                         }
                                     </div>
                                 }
                                 {(que.type === 'Checkbox' || que.type === 'Radio') &&
                                     <div className='checkbox'>
-                                        <input 
-                                        type="text" 
-                                        placeholder='Enter your questions?' 
-                                        onChange={(e) => handleQuestions(e, index)} 
-                                        required
+                                        <input
+                                            type="text"
+                                            placeholder='Enter your questions?'
+                                            onChange={(e) => handleQuestions(e, index)}
+                                            onBlur={() =>
+                                                setError((prevErr: any) => {
+                                                    return {
+                                                        ...prevErr,
+                                                        que: {
+                                                            ...prevErr.que,
+                                                            [que.id]: que.questions === ''
+                                                        }
+                                                    }
+                                                })
+                                            }
                                         />
-                                        { survey.questions[index].questions==='' && survey.questions[index].id === que.id &&
-                                            <Error text={'Question is required'}/>
+                                        {error.que && error.que[que.id] || isSubmitClicked &&
+                                            que.questions===''?<Error text={'Question is required'}/>:''
                                         }
-                                        { survey.questions[index].questions.replace(/\s/g, '').length < 10 && 
-                                        survey.questions[index].questions !== '' && isSubmitClicked &&
-                                                <Error text={'Question must contains minimum 10 char'}/> 
+                                        {que.questions.replace(/\s/g, '').length < 10 &&
+                                         que.questions !== ''  && isSubmitClicked &&
+                                            <Error text={'Question must contains minimum 10 char'} />
                                         }
-                                        { survey.questions[index].options.length < 2 && 
-                                                <Error text={'Please add at least two options'}/> 
+                                        {que.options.length < 2 &&
+                                            <Error text={'Please add at least two options'} />
                                         }
                                         {
                                             que?.options?.map((opt: opt, optIndex: number) => {
                                                 return (
                                                     <div key={opt.id} className='options'>
-                                                        <input 
-                                                        type="text" 
-                                                        placeholder='Option' 
-                                                        onChange={(e) => handleOptions(e, index, optIndex)} 
-                                                        required 
+                                                        <input
+                                                            type="text"
+                                                            placeholder='Option'
+                                                            onChange={(e) => handleOptions(e, index, optIndex)}
+
+                                                            onBlur={() =>
+                                                                setError((prevErr: any) => {
+                                                                    return {
+                                                                        ...prevErr,
+                                                                        opt: {
+                                                                            ...prevErr.opt,
+                                                                            [opt.id]: opt.text === ''
+                                                                        }
+                                                                    }
+                                                                })
+                                                            }
                                                         />
                                                         <button onClick={() => handleRemove(index, opt.id)}>Remove</button>
-                                                        { survey.questions[index].options[optIndex].id === opt.id && 
-                                                        survey.questions[index].options[optIndex].text === '' &&
-                                                            <Error text={'Option is required'}/>
+                                                        {error.opt && error.opt[opt.id]  || isSubmitClicked &&
+                                                            opt.text===''?<Error text={'Options is required'}/>:''
                                                         }
                                                     </div>
                                                 )
@@ -142,7 +169,13 @@ const Questions = ({ survey, handleQuestions, handleOptions, handleRemove, addOp
                     })
                 }
                 <div className='submit-btn'>
-                    <input type='submit' disabled={survey.questions?.length === 0 && isSubmitClicked } />
+                    <input
+                        type='submit'
+                        disabled={
+                            survey.questions?.length === 0 &&
+                            isSubmitClicked 
+                        }
+                    />
                 </div>
             </form>
         </div>

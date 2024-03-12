@@ -4,6 +4,10 @@
     margin-left: 0.3rem;
 }
 
+.title-desc .error{
+    margin-left: 6.4rem;
+}
+
 .disabled{
     opacity: 0.6;
     cursor: not-allowed;
