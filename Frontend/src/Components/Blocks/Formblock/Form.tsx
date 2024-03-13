@@ -35,7 +35,14 @@ const Form = () => {
     questions: []
   })
 
-  const [error, setError] = useState<any>({
+  type errorType = {
+    title: boolean,
+    desc: boolean,
+    que: any,
+    opt: any,
+    optLen: boolean
+  }
+  const [error, setError] = useState<errorType>({
     title: false,
     desc: false,
     que: {},
@@ -44,17 +51,19 @@ const Form = () => {
   })
 
   function addQuestion(type: string) {
-  const optId = Math.ceil(Math.random() * 1000);
+    const optId = Math.ceil(Math.random() * 1000);
 
     const opt = [{ id: optId, text: '' }, { id: optId + 1, text: '' }];
 
-  let queId = Math.ceil(Math.random() * 10000);
+    let queId = Math.ceil(Math.random() * 10000);
 
     setSurvey((prevSurvey: any) => ({
       ...prevSurvey,
       questions: [
         ...prevSurvey.questions,
-        type === 'Input' ? { id: queId, type: type, questions: '' } : { id: queId + 1, type: type, questions: '', options: opt }
+        type === 'Input' ? 
+        { id: queId, type: type, questions: '' } 
+        : { id: queId + 1, type: type, questions: '', options: opt }
       ],
     }));
   }
@@ -74,7 +83,7 @@ const Form = () => {
   }
 
   function addOption(index: number) {
-  const optId = Math.ceil(Math.random() * 1000);
+    const optId = Math.ceil(Math.random() * 1000);
 
     const copySurvey = { ...survey };  //copy of entire survey
     const opt = [...copySurvey.questions[index].options, { id: optId, text: '' }];
@@ -95,11 +104,6 @@ const Form = () => {
       options: removed
     }
     setSurvey(copysurvey)
-  }
-
-  function handleBlur(e: React.ChangeEvent<HTMLInputElement>){
-      
-        
   }
 
   return (
@@ -128,23 +132,18 @@ const Form = () => {
                   title: e.target.value
                 })
               }
-            }
-            onBlur={ ()=>{
-              setError({
-                ...error,
-                title: survey.title===''
-              })
-            }
-            }
+              }
+              onBlur={() => {
+                setError({
+                  ...error,
+                  title: survey.title === ''
+                })
+              }
+              }
               required
             />
-            { error.title &&
-              (
-                <div className='error'>
-                  <img src={errorIcon} alt="icon" />
-                  <p>Title is required</p>
-                </div>
-              )
+            {error.title &&
+              survey.title === '' ? <Error text={'Title is required'} /> : ''
             }
           </div>
           <div className='desc'>
@@ -158,19 +157,19 @@ const Form = () => {
                   desc: e.target.value
                 })
               }}
-              onBlur={()=>{
+              onBlur={() => {
                 setError({
                   ...error,
-                  desc: survey.desc===''
+                  desc: survey.desc === ''
                 })
               }}
             />
           </div>
           {error.desc &&
-            survey.desc===''?<Error text={'Description is required'}/>:''
+            survey.desc === '' ? <Error text={'Description is required'} /> : ''
           }
           {survey.desc.replace(/\s/g, '').length < 45 && survey.desc !== '' && isSubmitClicked &&
-            <Error text={'Description must contain minimum 45'}/>
+            <Error text={'Description must contain minimum 45'} />
           }
         </div>
         <div className='input-type-btn'>
@@ -195,7 +194,6 @@ const Form = () => {
         />
       </div>
     </div>
-
   )
 }
 

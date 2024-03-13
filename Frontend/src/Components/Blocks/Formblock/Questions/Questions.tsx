@@ -34,6 +34,11 @@ const Questions = ({ survey, handleQuestions, handleOptions, handleRemove, addOp
             if (que.type === 'Checkbox' || que.type === 'Radio') {
                 ans[1] = que.type === 'Checkbox' || que.type === 'Radio';
                 ans[2] = que.options.length >= 2;
+               {
+                que.options?.map((opt: opt)=>(
+                    ans[3]= opt.text !== ''
+                ))
+               }
             }
         });
 
@@ -48,10 +53,10 @@ const Questions = ({ survey, handleQuestions, handleOptions, handleRemove, addOp
             survey.desc !== '' &&
             survey.desc.replace(/\s/g, '').length > 45 &&
             (ans[1] ? ans[2] : true) &&
+            ans[3] &&
             validQue
         ) {
-            console.log(survey);
-
+          
             const postform = {
                 type: 'Survey',
                 formsurvey: survey
@@ -61,7 +66,9 @@ const Questions = ({ survey, handleQuestions, handleOptions, handleRemove, addOp
                 console.log(res);
                 if (res.status === 200) {
                     toast.success("Survey uploaded successfully!!");
-                    window.location.reload();
+                    setTimeout(()=>{
+                        window.location.reload();
+                    },2000)
                 }
             } catch (error) {
                 console.log(error);
