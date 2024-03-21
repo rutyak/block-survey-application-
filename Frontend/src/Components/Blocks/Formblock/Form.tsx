@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import './Form.css'
 import Button from '../../Button/Button';
 import Questions from './Questions/Questions';
-import errorIcon from '../../../Assets/error.png'
 import { Link } from 'react-router-dom';
 import Error from './Error/Error';
 
@@ -38,24 +37,17 @@ const Form = () => {
   type errorType = {
     title: boolean,
     desc: boolean,
-    que: any,
-    opt: any,
-    optLen: boolean
   }
+
   const [error, setError] = useState<errorType>({
     title: false,
-    desc: false,
-    que: {},
-    opt: {},
-    optLen: false
+    desc: false
   })
 
   function addQuestion(type: string) {
     const optId = Math.ceil(Math.random() * 1000);
-
     const opt = [{ id: optId, text: '' }, { id: optId + 1, text: '' }];
-
-    let queId = Math.ceil(Math.random() * 10000);
+    const queId = Math.ceil(Math.random() * 10000);
 
     setSurvey((prevSurvey: any) => ({
       ...prevSurvey,
@@ -69,41 +61,34 @@ const Form = () => {
   }
 
   function handleQuestions(e: React.ChangeEvent<HTMLInputElement>, index: number) {
-
-    const copySurvey = { ...survey }; //copy of survey 
-    const object = copySurvey.questions[index]; // taking que array
-    object.questions = e.target.value; //updating that que
+    const copySurvey = { ...survey };
+    copySurvey.questions[index].questions = e.target.value;
+    setSurvey(copySurvey);
   }
 
   function handleOptions(e: React.ChangeEvent<HTMLInputElement>, index: number, optIndex: number) {
-
-    const copySurvey = { ...survey }; //copy of survey
-    const mainQue = { ...copySurvey.questions[index] }; // taking specific que
-    mainQue.options[optIndex].text = e.target.value; //updating that ques option
+    const copySurvey = { ...survey };
+    copySurvey.questions[index].options[optIndex].text = e.target.value;
+    setSurvey(copySurvey);
   }
 
   function addOption(index: number) {
     const optId = Math.ceil(Math.random() * 1000);
-
-    const copySurvey = { ...survey };  //copy of entire survey
+    const copySurvey = { ...survey };
     const opt = [...copySurvey.questions[index].options, { id: optId, text: '' }];
-
-    copySurvey.questions[index] = {
-      ...copySurvey.questions[index], //copy of specific que
-      options: opt  //updating specific ques options
-    };
+    copySurvey.questions[index].options = opt;
     setSurvey(copySurvey);
   }
 
   function handleRemove(index: number, id: number) {
-    const removed = survey.questions[index]?.options?.filter((opt: opt) => (id !== opt.id));
-    const copysurvey = { ...survey };
+    const copySurvey = { ...survey };
+    const removed = copySurvey.questions[index].options.filter(opt => id !== opt.id);
+    copySurvey.questions[index].options = removed;
+    setSurvey(copySurvey);
+  }
 
-    copysurvey.questions[index] = {
-      ...copysurvey.questions[index],
-      options: removed
-    }
-    setSurvey(copysurvey)
+  function handleInputError(field: string, value: string) {
+    setError(prevError => ({ ...prevError, [field]: value === '' }));
   }
 
   return (

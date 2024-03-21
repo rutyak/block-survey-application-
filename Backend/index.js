@@ -10,7 +10,7 @@ const Formfetch = require('./routes/Formfetch')
 const Formans = require('./routes/Formans');
 require('dotenv').config({path:'./.env'})
 
-mongoose.connect('mongodb+srv://rutikkhandekar:rutik123@cluster.npb9ffx.mongodb.net/survey')
+mongoose.connect('mongodb://localhost:27017/surveys')
  
 const connection = mongoose.connection;
  

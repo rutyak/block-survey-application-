@@ -22,59 +22,47 @@ const Questions = ({ survey, handleQuestions, handleOptions, handleRemove, addOp
         e.preventDefault();
         setIsSubmitClicked(true);
 
-        let ans: any[] = [];
-
         localStorage.setItem('survey', JSON.stringify(survey));
 
-        const validQue = survey.questions?.every((que: queType) => {
-            return que.questions.length >= 10;
-        });
-
-        survey.questions?.forEach((que: queType) => {
-            if (que.type === 'Checkbox' || que.type === 'Radio') {
-                ans[1] = que.type === 'Checkbox' || que.type === 'Radio';
-                ans[2] = que.options.length >= 2;
-               {
-                que.options?.map((opt: opt)=>(
-                    ans[3]= opt.text !== ''
-                ))
-               }
+        const isValid = validateSurvey();
+        
+        if (isValid) {
+            try {
+                const res = await axios.post(`${BaseUrl}/formsurvey`, {
+                    type: 'Survey',
+                    formsurvey: survey
+                });
+                
+                if (res.status === 200) {
+                    toast.success("Survey uploaded successfully!!");
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 2000);
+                }
+            } catch (error) {
+                console.error(error);
+                toast.error('Something went wrong');
             }
-        });
+        }
+    }
+    function validateSurvey(): boolean {
 
         setError({
             ...error,
-            title: survey.title === '',
-            desc: survey.desc === ''
+            title: survey.title.replace(/\s/g, '') === '',
+            desc: survey.desc.replace(/\s/g, '') === '' || survey.desc.replace(/\s/g, '').length <= 45
         });
-
-        if (
-            survey.title !== '' &&
-            survey.desc !== '' &&
-            survey.desc.replace(/\s/g, '').length > 45 &&
-            (ans[1] ? ans[2] : true) &&
-            ans[3] &&
-            validQue
-        ) {
-          
-            const postform = {
-                type: 'Survey',
-                formsurvey: survey
+    
+        const isValidQuestions = survey.questions?.every((que: queType) => {
+            if (que.type === 'Input') {
+                return que.questions.replace(/\s/g, '') !== '' && que.questions.replace(/\s/g, '').length >= 10;
+            } else if (que.type === 'Checkbox' || que.type === 'Radio') {
+                return que.options.length >= 2 && que.options.every((opt: opt) => opt.text.replace(/\s/g, '') !== '') && que.questions.replace(/\s/g, '') !== '' && que.questions.replace(/\s/g, '').length >= 10;
             }
-            try {
-                const res = await axios.post(`${BaseUrl}/formsurvey`, postform);
-                console.log(res);
-                if (res.status === 200) {
-                    toast.success("Survey uploaded successfully!!");
-                    setTimeout(()=>{
-                        window.location.reload();
-                    },2000)
-                }
-            } catch (error) {
-                console.log(error);
-                toast.error('Something is wrong');
-            }
-        }
+            return true;
+        });
+    
+        return survey.title.replace(/\s/g, '') !== '' && survey.desc.replace(/\s/g, '') !== '' && survey.desc.replace(/\s/g, '').length >= 45 && isValidQuestions;
     }
 
     return (

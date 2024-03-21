@@ -3,7 +3,6 @@ import './Preview.css';
 
 const Preview = () => {
  
-    let queId = Math.ceil(Math.random() * 100000);
     type opt = {
         id: number,
         text: string
@@ -17,6 +16,7 @@ const Preview = () => {
     }
 
     const [survey, setSuvey] = useState<any>();
+
     useEffect(()=>{
     const storedData = localStorage.getItem('survey');
 
@@ -25,6 +25,7 @@ const Preview = () => {
       setSuvey(data);
     } 
     },[])
+
     console.log(survey);
 
   return (
