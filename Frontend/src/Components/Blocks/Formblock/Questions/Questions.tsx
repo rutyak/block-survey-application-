@@ -2,7 +2,7 @@ import Error from '../Error/Error'
 import './Questions.css'
 import { toast } from 'react-toastify'
 import axios from 'axios'
-const BaseUrl = "http://localhost:5000"
+const BaseUrl = process.env.mongoos_api;
 
 const Questions = ({ survey, handleQuestions, handleOptions, handleRemove, addOption, error, setError, setIsSubmitClicked, isSubmitClicked }: any) => {
 

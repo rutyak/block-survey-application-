@@ -87,10 +87,6 @@ const Form = () => {
     setSurvey(copySurvey);
   }
 
-  function handleInputError(field: string, value: string) {
-    setError(prevError => ({ ...prevError, [field]: value === '' }));
-  }
-
   return (
     <div className='form-container'>
       <h2>Survey</h2>
