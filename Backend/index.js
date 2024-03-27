@@ -1,3 +1,4 @@
+require('dotenv').config({path:'./.env'})
 const express = require('express');
 const cors = require('cors')
 const mongoose = require('mongoose');
@@ -8,9 +9,8 @@ app.use(cors()); // allow to access data or add data
 const Formsurvey = require('./routes/Formsurvey')
 const Formfetch = require('./routes/Formfetch')
 const Formans = require('./routes/Formans');
-require('dotenv').config({path:'./.env'})
 
-mongoose.connect('mongodb+srv://rutik:rutik@cluster0.br3fp.mongodb.net/')
+mongoose.connect(process.env.mongodb_uri)
  
 const connection = mongoose.connection;
  
@@ -23,6 +23,6 @@ app.use(Formsurvey);
 app.use(Formfetch);
 app.use(Formans);
 
-app.listen(port,()=>{
+app.listen(process.env.PORT || port,()=>{
     console.log(`Server is running at http://localhost:${port}`);
 })
