@@ -2,7 +2,6 @@ import Error from '../Error/Error'
 import './Questions.css'
 import { toast } from 'react-toastify'
 import axios from 'axios'
-const BaseUrl = process.env.mongoos_api;
 
 const Questions = ({ survey, handleQuestions, handleOptions, handleRemove, addOption, error, setError, setIsSubmitClicked, isSubmitClicked }: any) => {
 
@@ -28,7 +27,7 @@ const Questions = ({ survey, handleQuestions, handleOptions, handleRemove, addOp
         
         if (isValid) {
             try {
-                const res = await axios.post(`${BaseUrl}/formsurvey`, {
+                const res = await axios.post(`${process.env.REACT_APP_API_KEY}/formsurvey`, {
                     type: 'Survey',
                     formsurvey: survey
                 });
